@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>rabbitmq</name>
+	<name>DQ</name>
 	<description>Demo rabbitmq for Spring Boot</description>
 
 	<parent>
