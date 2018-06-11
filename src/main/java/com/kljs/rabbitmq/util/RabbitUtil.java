@@ -6,6 +6,8 @@ import com.rabbitmq.client.GetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class RabbitUtil {
 
@@ -33,14 +35,35 @@ public class RabbitUtil {
      * @return
      * @throws Exception
      */
-    public String fetch(String queue, boolean autoAck) throws Exception {
+    public GetResponse fetch(String queue, boolean autoAck) throws Exception {
         Channel channel = rabbitClient.createChannel();
         GetResponse getResponse = channel.basicGet(queue, autoAck);
-        if(null == getResponse) {
-            return null;
-        }
-        byte[] body = getResponse.getBody();
-        return new String(body);
+        return getResponse;
     }
+
+    /**
+     * 消息确认机制
+     * @param getResponse
+     * @throws IOException
+     */
+    public void ack(GetResponse getResponse) throws IOException {
+        if(null != getResponse) {
+            Channel channel = rabbitClient.createChannel();
+            channel.basicAck(getResponse.getEnvelope().getDeliveryTag(), false);
+        }
+    }
+
+    /**
+     * 消息重入队列
+     * @param getResponse
+     * @throws IOException
+     */
+    public void nack(GetResponse getResponse) throws IOException {
+        if(null != getResponse) {
+            Channel channel = rabbitClient.createChannel();
+            channel.basicNack(getResponse.getEnvelope().getDeliveryTag(), false, true);
+        }
+    }
+
 
 }
