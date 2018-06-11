@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ClickController {
+public class ClickSendController {
 
     @Autowired
     private DQProducer clickProducer;
 
-    @RequestMapping(value = "/event/click", method = RequestMethod.POST)
+    @RequestMapping(value = "/event/click/send", method = RequestMethod.POST)
     public void findOneCity(@RequestBody ClickEventMessage clickEventMessage) throws Exception {
         clickProducer.send(clickEventMessage);
     }
