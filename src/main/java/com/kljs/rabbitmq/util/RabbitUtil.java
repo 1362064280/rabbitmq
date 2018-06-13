@@ -1,6 +1,7 @@
 package com.kljs.rabbitmq.util;
 
 import com.kljs.rabbitmq.help.MapperHelper;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,21 @@ public class RabbitUtil {
         //发送
         channel.basicPublish(exchange, routingKey, null, MapperHelper.writeValueAsString(message).getBytes());
     }
+
+    /**
+     * 发送消息
+     * @param exchange
+     * @param routingKey
+     * @param data
+     * @throws Exception
+     */
+    public void send(String exchange, String routingKey, AMQP.BasicProperties properties, byte[] data) throws IOException {
+        //获取channel
+        Channel channel = rabbitClient.createChannel();
+        //发送
+        channel.basicPublish(exchange, routingKey, properties, data);
+    }
+
 
     /**
      * 获取消息
